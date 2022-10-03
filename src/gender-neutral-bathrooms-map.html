@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Gender Inclusive Bathrooms Map</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Roboto";
+            /*background-color: pink;*/
+        }
+
+        #title {
+            margin-bottom: 25px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            /*left text inside title box*/
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        #bodyF {
+            width: 50%;
+            /*makes sure the graphic only takes up the middle n% of the page*/
+            margin-left: auto;
+            margin-right: auto;
+            /*centers the graphic*/
+            padding: 0;
+            /*background-color: brown;*/
+        }
+
+        .dek {
+            font-size: 18px;
+            font-weight: thin;
+            color: black;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+
+        .caption {
+            font-size: 14px;
+            font-weight: thin;
+        }
+
+        .popup {
+            font-size: 14px;
+            margin-top: 5px;
+            margin-bottom: 0px;
+            font: "Roboto";
+            font-weight: thin;
+        }
+
+        #foot1 {
+            font-size: 14px;
+            font-weight: thin;
+            margin-top: 10px;
+            margin-bottom: 0px;
+            color: slategray;
+        }
+
+        #foot2 {
+            font-size: 14px;
+            font-weight: thin;
+            margin-top: 3px;
+            margin-bottom: 10px;
+            color: slategray
+        }
+
+        #map {
+            display: block;
+            /*makes sure map appears under the title*/
+            bottom: 0;
+            /*width: 540px;
+            height: 720px;*/
+            width: 100%;
+            height: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            /*centers the map*/
+        }
+
+        @media only screen and (max-width: 1300px) and (min-width: 800px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .dek {
+                font-size: 14px;
+            }
+        }
+
+        @media only screen and (max-width: 800px) {
+            h1 {
+                font-size: 16px;
+            }
+
+            .dek {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="bodyF">
+
+        <div id="title">
+            <h1>Columbia's Morningside Heights campus now has 26 buildings with gender-inclusive restrooms.</h1>
+            <p class="dek">Twenty of those 26 buildings have gender-inclusive restrooms that are also wheelchair
+                accessible.</p>
+            <p class="dek">Use this map to zoom in on buildings and click on pins to get more information.</p>
+        </div>
+
+        <p class="caption">* Indicates restroom is all-gender and wheelchair accessible</p>
+        <div id="map"></div>
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoibWVocmthdXIiLCJhIjoiY2t6dDByODA4MTlhdTJ3cngydm1sYm0zOCJ9.JR0bZW31NCyKJJUd9QqH0A';
+            const map = new mapboxgl.Map({
+                container: 'map', // container id
+                style: 'mapbox://styles/mehrkaur/cl8b2lmp4000215rty9e6kz1d', // replace this with your style URL
+                center: [-73.9615, 40.8082],
+                zoom: 15.5
+            });
+
+            /* 
+            Add an event listener that runs
+            when a user clicks on the map element.
+            */
+            map.on('click', (event) => {
+                // If the user clicked on one of your markers, get its information.
+                const features = map.queryRenderedFeatures(event.point, {
+                    layers: ['gender-neutral-bathrooms'] // replace with your layer name
+                });
+                if (!features.length) {
+                    return;
+                }
+                const feature = features[0];
+
+                /* 
+                Create a popup, specify its options 
+                and properties, and add it to the map.
+                */
+                const popup = new mapboxgl.Popup({ offset: [0, -15] })
+                    .setLngLat(feature.geometry.coordinates)
+                    .setHTML(
+                        `<p class="popup" style="font-weight:bold;">${feature.properties.title}</p><p class="popup">${feature.properties.floor}</p>`
+                    )
+                    .addTo(map);
+            });
+
+
+        </script>
+        <p id="foot1">Source: Columbia University Facilities and Operations</p>
+        <p id="foot2">Graphic by Mehr Kaur</p>
+
+
+
+    </div>
+
+</body>
+
+</html>
